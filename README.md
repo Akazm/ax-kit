@@ -11,13 +11,17 @@ error-prone and a huge pain, so AXKit makes everything easier:
 This framework is intended as a basic wrapper, and doesn't keep any state or do any "magic".
 That's up to you!
 
-## Using AXSwift
+## Using AXKit
 
 ### SPM
 In your Package.swift:
 ```
 .package(url: "https://github.com/akazm/ax-kit", from: "1.0.0"),
 ```
+
+### Documentation
+
+[View auto-generated SwiftDoc](https://akazm.github.io/ax-kit/documentation/axkit/)
 
 See the source of [AXKitExample](https://github.com/akazm/ax-kit/blob/master/AXKitExample/AppDelegate.swift)
 and [AXKitObserverExample](https://github.com/akazm/ax-kit/blob/master/AXKitObserverExample/AppDelegate.swift)
