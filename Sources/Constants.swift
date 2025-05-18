@@ -1,6 +1,6 @@
 /// All possible notifications you can subscribe to with `Observer`.
 /// - seeAlso: [Notificatons](https://developer.apple.com/library/mac/documentation/AppKit/Reference/NSAccessibility_Protocol_Reference/index.html#//apple_ref/c/data/NSAccessibilityAnnouncementRequestedNotification)
-public enum AXNotification: String {
+public enum AXNotification: String, Sendable {
     // Focus notifications
     case mainWindowChanged = "AXMainWindowChanged"
     case focusedWindowChanged = "AXFocusedWindowChanged"

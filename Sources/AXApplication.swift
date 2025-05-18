@@ -61,20 +61,9 @@ public struct AXApplication: AXElement {
     }
 
     /// Creates an `Observer` on this application, if it is still alive.
-    public func createObserver(_ callback: @escaping Observer<Self>.Callback) -> Observer<Self>? {
+    public func createObserver(_ callback: @escaping AXKitObserver<Self>.Callback) -> AXKitObserver<Self>? {
         do {
-            return try Observer(processID: pid(), callback: callback)
-        } catch AXError.invalidUIElement {
-            return nil
-        } catch {
-            fatalError("Caught unexpected error creating observer: \(error)")
-        }
-    }
-
-    /// Creates an `Observer` on this application, if it is still alive.
-    public func createObserver(_ callback: @escaping Observer<Self>.CallbackWithInfo) -> Observer<Self>? {
-        do {
-            return try Observer(processID: pid(), callback: callback)
+            return try AXKitObserver(processID: pid(), callback: callback)
         } catch AXError.invalidUIElement {
             return nil
         } catch {

@@ -12,10 +12,18 @@ let package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/nicklockwood/SwiftFormat", .upToNextMajor(from: "0.55.0")),
+        .package(url: "https://github.com/swhitty/swift-mutex", .upToNextMajor(from: "0.0.5")),
     ],
     targets: [
         .target(
             name: "AXKit",
+            dependencies: [
+                .product(
+                    name: "Mutex",
+                    package: "swift-mutex",
+                    condition: .when(platforms: [.macOS])
+                )
+            ],
             path: "Sources"
         ),
         .executableTarget(
@@ -25,7 +33,14 @@ let package = Package(
         ),
         .executableTarget(
             name: "AXKitObserverExample",
-            dependencies: ["AXKit"],
+            dependencies: [
+                "AXKit",
+                .product(
+                    name: "Mutex",
+                    package: "swift-mutex",
+                    condition: .when(platforms: [.macOS])
+                )
+            ],
             path: "AXKitObserverExample"
         ),
     ]

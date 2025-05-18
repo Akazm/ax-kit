@@ -1,8 +1,9 @@
 import AXKit
 import Cocoa
+import Mutex
 
 class AppDelegate: NSObject, NSApplicationDelegate {
-    var observer: Observer<AXApplication>!
+    var observer: AXKitObserver<AXApplication>!
 
     func applicationDidFinishLaunching(_: Notification) {
         let app = AXApplication.allForBundleID("com.apple.finder").first!
@@ -15,11 +16,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
     }
 
-    @MainActor func startWatcher(_ app: AXApplication) throws {
-        var updated = false
+    func startWatcher(_ app: AXApplication) throws {
+        let updated: Mutex<Bool> = .init(false)
         observer = app
             .createObserver { (
-                observer: Observer,
+                observer: AXKitObserver<AXApplication>,
                 element: AXApplication,
                 event: AXNotification,
                 info: [String: AnyObject]?
@@ -43,12 +44,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 }
 
                 // Group simultaneous events together with --- lines
-                if !updated {
-                    updated = true
+                if !updated.withLock({ $0 }) {
+                    updated.withLock { $0 = true }
                     // Set this code to run after the current run loop, which is dispatching all notifications.
                     DispatchQueue.main.async {
                         print("---")
-                        updated = false
+                        updated.withLock { $0 = false }
                     }
                 }
             }
