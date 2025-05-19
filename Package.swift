@@ -12,7 +12,7 @@ let package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/nicklockwood/SwiftFormat", .upToNextMajor(from: "0.55.0")),
-        .package(url: "https://github.com/swhitty/swift-mutex", .upToNextMajor(from: "0.0.5")),
+        .package(url: "https://github.com/swhitty/swift-mutex", .upToNextMajor(from: "0.0.5"))
     ],
     targets: [
         .target(
@@ -20,8 +20,7 @@ let package = Package(
             dependencies: [
                 .product(
                     name: "Mutex",
-                    package: "swift-mutex",
-                    condition: .when(platforms: [.macOS])
+                    package: "swift-mutex"
                 )
             ],
             path: "Sources"

@@ -1,6 +1,6 @@
 @preconcurrency import Cocoa
 
-public struct GenericAXElement: AXElement {
+public struct AnyAXElement: AXElement {
     public var element: AXUIElement
 
     public init(_ nativeElement: AXUIElement) {

@@ -63,9 +63,9 @@ public struct AXWindow: AXElement {
         guard options.contains(.noSheets) else {
             return AXWindow(axuiElement)
         }
-        var uiElement = GenericAXElement(axuiElement)
+        var uiElement = AnyAXElement(axuiElement)
         while (try? uiElement.role()) == .sheet {
-            if let parentElement: GenericAXElement = try? uiElement.attribute(.parent) {
+            if let parentElement: AnyAXElement = try? uiElement.attribute(.parent) {
                 uiElement = parentElement
             } else {
                 return nil

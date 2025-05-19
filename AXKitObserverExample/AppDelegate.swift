@@ -3,7 +3,6 @@ import Cocoa
 import Mutex
 
 class AppDelegate: NSObject, NSApplicationDelegate {
-    var observer: AXKitObserver<AXApplication>!
 
     func applicationDidFinishLaunching(_: Notification) {
         let app = AXApplication.allForBundleID("com.apple.finder").first!
@@ -16,22 +15,19 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
     }
 
+    @MainActor
     func startWatcher(_ app: AXApplication) throws {
         let updated: Mutex<Bool> = .init(false)
-        observer = app
-            .createObserver { (
-                observer: AXKitObserver<AXApplication>,
-                element: AXApplication,
-                event: AXNotification,
-                info: [String: AnyObject]?
-            ) in
+        let stream = AXKitObserver.stream(processID: try app.pid(), notifications: [.windowCreated, .mainWindowChanged])
+        Task {
+            for try await (observer, element, event) in stream {
                 var elementDesc: String!
-                if let role = try? element.role()!, role == .window {
+                if let role = try? element.role(), role == .window {
                     elementDesc = "\(element) \"\(try! (element.attribute(.title) as String?)!)\""
                 } else {
                     elementDesc = "\(element)"
                 }
-                print("\(event) on \(String(describing: elementDesc)); info: \(info ?? [:])")
+                print("\(event) on \(String(describing: elementDesc))")
 
                 // Watch events on new windows
                 if event == .windowCreated {
@@ -53,9 +49,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                     }
                 }
             }
-
-        try observer.addNotification(.windowCreated, forElement: app)
-        try observer.addNotification(.mainWindowChanged, forElement: app)
+        }
     }
 
     func applicationWillTerminate(_: Notification) {

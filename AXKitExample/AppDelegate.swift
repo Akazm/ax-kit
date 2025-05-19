@@ -4,7 +4,7 @@ import Cocoa
 class ApplicationDelegate: NSObject, NSApplicationDelegate {
     func applicationDidFinishLaunching(_: Notification) {
         // Check that we have permission
-        guard GenericAXElement.isProcessTrusted(withPrompt: true) else {
+        guard AnyAXElement.isProcessTrusted(withPrompt: true) else {
             NSLog("No accessibility API permission, exiting")
             NSRunningApplication.current.terminate()
             return

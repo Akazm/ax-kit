@@ -40,9 +40,28 @@ import Foundation
 /// - seeAlso: [AXUIElement.h reference](https://developer.apple.com/library/mac/documentation/ApplicationServices/Reference/AXUIElement_header_reference/)
 public protocol AXElement: Sendable, CustomStringConvertible, Equatable {
     var element: AXUIElement { get }
+    init(_ nativeElement: AXUIElement)
 }
 
 public extension AXElement {
+    
+    func eraseToAny() -> AnyAXElement {
+        .init(element)
+    }
+    
+    func isEnhancedUserInterfaceEnabled() -> Bool {
+        let value: Bool = (try? attribute(Attribute.enhancedUserInterface)) ?? false
+        return value
+    }
+    
+    var application: AnyAXElement? {
+        if (try? role()) == AXKit.Role.application {
+            return AnyAXElement(element)
+        }
+        let parent = try? attribute(Attribute.parent, as: AnyAXElement.self)
+        return parent?.application
+    }
+    
     /// Checks if the current process is a trusted accessibility client. If false, all APIs will
     /// throw errors.
     ///
@@ -424,7 +443,7 @@ public extension AXElement {
     fileprivate func unpackAXValue(_ value: AnyObject) -> Any {
         switch CFGetTypeID(value) {
             case AXUIElementGetTypeID():
-                return GenericAXElement(value as! AXUIElement)
+                return AnyAXElement(value as! AXUIElement)
             case AXValueGetTypeID():
                 let type = AXValueGetType(value as! AXValue)
                 switch type {

@@ -61,7 +61,8 @@ public struct AXApplication: AXElement {
     }
 
     /// Creates an `Observer` on this application, if it is still alive.
-    public func createObserver(_ callback: @escaping AXKitObserver<Self>.Callback) -> AXKitObserver<Self>? {
+    @MainActor
+    public func createObserver(_ callback: @escaping AXKitObserver.Callback) -> AXKitObserver? {
         do {
             return try AXKitObserver(processID: pid(), callback: callback)
         } catch AXError.invalidUIElement {
@@ -79,16 +80,16 @@ public struct AXApplication: AXElement {
         return axWindows?.map { AXWindow($0) }
     }
     
-    public func elementAtPosition(_ x: Float, _ y: Float) throws(AXError) -> GenericAXElement? {
+    public func elementAtPosition(_ x: Float, _ y: Float) throws(AXError) -> AnyAXElement? {
         var result: AXUIElement?
         let error = AXUIElementCopyElementAtPosition(element, x, y, &result)
         if error == .noValue {
-            return nil as GenericAXElement?
+            return nil as AnyAXElement?
         }
         guard error == .success else {
             throw error
         }
-        return GenericAXElement(result!)
+        return AnyAXElement(result!)
     }
     
 }
