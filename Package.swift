@@ -7,7 +7,7 @@ let package = Package(
     products: [
         .library(
             name: "AXKit",
-            targets: ["AXKit"]
+            targets: ["AXKit", "AccessibilityBridging"]
         ),
     ],
     dependencies: [
@@ -15,15 +15,17 @@ let package = Package(
         .package(url: "https://github.com/swhitty/swift-mutex", .upToNextMajor(from: "0.0.5"))
     ],
     targets: [
+        .target(name: "AccessibilityBridging", publicHeadersPath: "include"),
         .target(
             name: "AXKit",
             dependencies: [
+                "AccessibilityBridging",
                 .product(
                     name: "Mutex",
                     package: "swift-mutex"
                 )
             ],
-            path: "Sources"
+            path: "Sources/AXKit"
         ),
         .executableTarget(
             name: "AXKitExample",

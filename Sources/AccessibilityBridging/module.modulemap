@@ -1,0 +1,4 @@
+module AXC {
+    header "include/AccesibilityBridgingHeader.h"
+    export *
+}
