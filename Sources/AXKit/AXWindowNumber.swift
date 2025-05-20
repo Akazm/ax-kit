@@ -2,7 +2,7 @@ import AppKit
 import AccessibilityBridging
 import CoreGraphics
 
-public struct AXWindowID: Hashable {
+public struct AXWindowID: Hashable, Sendable {
     public let windowNumber: CGWindowID
     public let processID: pid_t?
 }
