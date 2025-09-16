@@ -1,6 +1,8 @@
 import Cocoa
 import Foundation
 
+extension AXError: @retroactive _BridgedNSError {}
+extension AXError: @retroactive _ObjectiveCBridgeableError {}
 extension AXError: Swift.Error {}
 
 // For some reason values don't get described in this enum, so we have to do it manually.
